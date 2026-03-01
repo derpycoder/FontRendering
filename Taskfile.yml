@@ -38,7 +38,7 @@ tasks:
     summary: https://gist.github.com/oskarnp/56a5be5722e96b50295f08d9aa33d310
     cmds: 
       # NO_COLOR=1 
-      - MTL_HUD_ENABLED=1 MTL_HUD_CONFIG_FILE=hud/fps-graph.plist odin run ./src -collection:shared=shared
+      - MTL_HUD_ENABLED=1 MTL_HUD_CONFIG_FILE=hud/fps-graph.plist odin run ./src -collection:shared=shared -define:nopanic=true -define:noansi=true
       # - odin run build.odin -file -- run
 
   debug:

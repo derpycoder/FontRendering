@@ -99,7 +99,6 @@ main :: proc() {
 	game_init()
 
 	when USE_TRACKING_ALLOCATOR {
-		tracker.PANIC = false
 		t := tracker.init_tracker()
 		context.allocator = tracker.tracking_allocator(&t)
 		defer tracker.print_and_destroy_tracker(&t)
