@@ -37,13 +37,14 @@ Game_State :: struct {
 	model_mat: Mat4,
 
 	old_string: string,
+	new_string: string,
 
 	ssbo    : [dynamic]SSBO_Font_Local,
 	ssbo_buf: ^sdl.GPUBuffer,
 
 	char_count: u32,
 
-	builder: strings.Builder
+	// builder: strings.Builder
 }
 
 game_init :: proc() {
@@ -78,7 +79,15 @@ game_init :: proc() {
 
 	g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 
-	g.builder = strings.builder_make(context.temp_allocator)
+	// g.builder = strings.builder_make(context.allocator)
+	// strings.write_string(&g.builder, "Made with ")
+    // strings.write_rune(&g.builder, 0xe23a)
+    // strings.write_string(&g.builder, " by ")
+    // strings.write_string(&g.builder, g.text)
+
+    // g.new_string = strings.to_string(g.builder)
+
+    g.new_string = g.text
 }
 
 game_update :: proc(dt: f64, alpha: f64) {
@@ -86,7 +95,20 @@ game_update :: proc(dt: f64, alpha: f64) {
 		im.ColorEdit3("Ambient Color", &g.ambient_light_color, {.Float})
 
 		im.SeparatorText("Names")
-		if im.InputText("Text: ", cstring(&g.text_buf[0]), 4_500_000) do g.text = string(cstring(&g.text_buf[0]))
+		if im.InputText("Text: ", cstring(&g.text_buf[0]), 4_500_000) {
+			g.text = string(cstring(&g.text_buf[0]))
+
+			// strings.builder_reset(&g.builder)
+		    // strings.builder_destroy(&g.builder)
+		    // g.builder = strings.builder_make(context.allocator)
+		    // strings.write_string(&g.builder, "Made with ")
+		    // strings.write_rune(&g.builder, 0xe23a)
+		    // strings.write_string(&g.builder, " by ")
+		    // strings.write_string(&g.builder, g.text)
+
+		    // g.new_string = strings.to_string(g.builder)
+		    g.new_string = g.text
+		}
 
 	}
 	im.End()
@@ -133,19 +155,7 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 	copy_pass := sdl.BeginGPUCopyPass(copy_cmd_buf)
 
 	{
-	    strings.builder_reset(&g.builder)
-	    strings.builder_destroy(&g.builder)
-	    g.builder = strings.builder_make(context.temp_allocator)
-	    strings.write_string(&g.builder, "Made with ")
-	    strings.write_rune(&g.builder, 0xe23a)
-	    strings.write_string(&g.builder, " by ")
-	    strings.write_string(&g.builder, g.text)
-
-	    new_string := strings.to_string(g.builder)
-
-	    if new_string != g.old_string {
-	    	g.old_string = new_string
-
+	    if g.new_string != g.old_string {
 	    	cursor: f32
 			y     : f32
 	    	v, i  : u16
@@ -158,7 +168,7 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 
 			count: u32
 
-			for char in new_string {
+			for char in g.new_string {
 				glyph := g.msdf_data.glyphs_lut[i32(char)]
 
 				pl, pb, pr, pt : f32 = glyph.planeBounds.left, glyph.planeBounds.bottom, glyph.planeBounds.right, glyph.planeBounds.top
@@ -221,9 +231,9 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 			delete(g.ssbo)
 			g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 			sdl.ReleaseGPUTransferBuffer(g.gpu, transfer_buf)
-		}
 
-		new_string = ""
+			g.old_string = g.new_string
+		}
 	}
 
 	sdl.EndGPUCopyPass(copy_pass)
