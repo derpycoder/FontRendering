@@ -164,7 +164,7 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 				pl, pb, pr, pt : f32 = glyph.planeBounds.left, glyph.planeBounds.bottom, glyph.planeBounds.right, glyph.planeBounds.top
 		        al, ab, ar, at : f32 = glyph.atlasBounds.left, glyph.atlasBounds.bottom, glyph.atlasBounds.right, glyph.atlasBounds.top
 
-				model_mat  := linalg.matrix4_from_trs_f32({-0.80 + cursor, y, 0}, 0, 0.2)
+				model_mat  := linalg.matrix4_from_trs_f32({-1.6 + cursor, y, 0}, 0, 0.2)
 
 				if count == 10_000 {
 					count = 0
