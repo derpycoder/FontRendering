@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- Identity -->
+    <key>CFBundleName</key>
+    <string>MyGameDev</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>MyGameDev</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.example.mygame.dev</string>
+
+    <key>CFBundleExecutable</key>
+    <string>MyGame</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <!-- Versions -->
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.0-dev</string>
+
+    <!-- Cocoa -->
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <key>NSHighResolutionCapable</key>
+    <true/>
+
+    <key>LSUIElement</key>
+    <false/>
+
+    <key>NSAppSleepDisabled</key>
+    <true/>
+
+    <!-- Metal GPU capture / validation -->
+    <key>METAL_DEVICE_WRAPPER_TYPE</key>
+    <integer>1</integer>
+
+    <key>MTL_ENABLE_GPU_CAPTURE</key>
+    <true/>
+
+    <key>LSEnvironment</key>
+    <dict>
+        <key>MTL_HUD_ENABLED</key>
+        <string>1</string>
+
+        <key>MTL_DEBUG_LAYER</key>
+        <string>1</string>
+
+        <key>MTL_ENABLE_DEBUG_INFO</key>
+        <string>1</string>
+
+        <key>MTL_CAPTURE_ENABLED</key>
+        <string>1</string>
+    </dict>
+
+    <!-- Game / app category -->
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.games</string>
+
+    <key>LSSupportsGameMode</key>
+    <true/>
+
+    <key>MTLDevicePreference</key>
+    <string>HighPerformance</string>
+
+    <!-- Minimum macOS -->
+    <key>LSMinimumSystemVersion</key>
+    <string>12.0</string>
+
+</dict>
+</plist>

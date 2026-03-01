@@ -1,0 +1,24 @@
+*.dxil
+*.spv
+*.json
+*.air
+# *.metal
+
+temp.txt
+
+**.dSYM
+.DS_Store
+
+extras
+
+sdl3
+Debug
+MyGame.app
+MyGame
+
+build
+
+!assets/fonts/*.json
+!ols.json
+
+*.sublime-workspace

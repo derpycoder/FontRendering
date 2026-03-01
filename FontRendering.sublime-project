@@ -1,0 +1,61 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"name": "FontRendering",
+            "file_exclude_patterns": ["*.log", "*.tmp"],
+            "folder_exclude_patterns": ["node_modules", ".git"],
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "Run",
+			"shell_cmd": "task run",
+			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$",
+		},
+		{
+			"name": "Debug",
+			"shell_cmd": "task debug",
+			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$",
+		},
+		{
+			"name": "Compile Shaders",
+			"shell_cmd": "task compile_shaders",
+			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$",
+		},
+		{
+			"name": "Bundle",
+			"shell_cmd": "task bundle",
+			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$",
+		},
+	],
+	"settings":
+	{
+		"auto_complete": false,
+		"tab_completion": false,
+		"LSP":
+		{
+			"odin":
+			{
+				"enabled": true,
+			},
+		},
+	},
+	"debugger_configurations":
+	[
+		{
+            "name": "Odin Debug (LLDB)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/Debug", // Path to your compiled Odin executable
+            "cwd": "${workspaceFolder}", // Current working directory (project root)
+            "terminal": "console",
+            // "arguments": [], // Command-line arguments for your program (if any)
+            // "stopOnEntry": true,
+            // "MIMode": "lldb",
+            // "miDebuggerPath": "/usr/bin/lldb" // Path to your GDB executable
+        }
+	],
+}

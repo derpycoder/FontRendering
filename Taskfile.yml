@@ -1,0 +1,88 @@
+version: "3"
+
+# Shared Deps: /opt/homebrew/opt/odin/libexec/shared
+
+tasks:
+  install_deps:
+    summary:
+      May have to build these by going into the directory and just run build.sh or something.
+    cmds:
+      - brew install sdl3
+      - brew install sdl3_image
+
+  init_imgui:
+    summary:
+      Go into shared directory of odin and then clone / put a zip of imgui in it.
+      Then install deps like ply and build the project.
+    cmds:
+      - cd /opt/homebrew/opt/odin/libexec/shared
+      - python3 -m venv venv
+      - source venv/bin/activate
+      - python3 -m pip install ply
+      - python3 build.py
+
+  init_msdf:
+    cmds:
+      - brew install cmake pkg-config
+      - git clone https://github.com/microsoft/vcpkg.git "$HOME/vcpkg"
+      - cd /opt/homebrew/opt/vcpkg
+      - ./bootstrap-vcpkg.sh
+      - cmake .
+      - make
+
+  compile_shaders:
+    cmds:
+      - odin run build.odin -file
+
+  run:
+    summary: https://gist.github.com/oskarnp/56a5be5722e96b50295f08d9aa33d310
+    cmds: 
+      # NO_COLOR=1 
+      - MTL_HUD_ENABLED=1 MTL_HUD_CONFIG_FILE=hud/fps-graph.plist odin run ./src -collection:shared=shared
+      # - odin run build.odin -file -- run
+
+  debug:
+    summary:
+        odin help build
+       -vet -strict-style -vet-tabs -disallow-do -warnings-as-errors -vet-shadowing
+       -vet-using-param -vet-using-stmt
+       -sanitize:address -sanitize:thread
+       -default-to-panic-allocator (In case I decide not to allocate at all later)
+       -sanitize:memory (Only supported in Linux / FreeBSD) [Less common in Odin because of Zero Initialization]
+
+       MTL_CAPTURE_ON_LAUNCH=1
+       Cmd + Shift + C for GPU Frame Capture (~/Library/Developer/Xcode/GPU Capture/)
+       Open it with Xcode → Open Developer Tool → GPU Frame Capture
+
+       MTL_HUD_CONFIG_FILE=hud/full.plist
+
+       -vet -vet-cast -vet-tabs -warnings-as-errors -vet-shadowing -sanitize:address -vet-using-param -vet-using-stmt
+    cmds:
+      - odin build ./src -out:Debug -debug -collection:shared=shared
+      - MTL_HUD_ENABLED=1 ./Debug
+      # - odin run build.odin -file
+
+  scaffold:
+    summary:
+      Create the folders inside MacBundle
+    cmds:
+      - mkdir -p MyGame.app/Contents/MacOS MyGame.app/Contents/Resources
+      - plutil -lint Info.plist
+      - otool -L MyGame
+
+  bundle:
+    cmds:
+      - odin build ./src -debug -out:MyGame -collection:shared=shared
+      - rsync -au --checksum Info.plist MyGame.app/Contents/Info.plist
+      - rsync -au --checksum ./MyGame MyGame.app/Contents/MacOS/MyGame
+      - rsync -a  --checksum --exclude='.DS_Store' ./assets/ MyGame.app/Contents/Resources/assets/
+      - chmod +x MyGame.app
+      - codesign -fs - MyGame.app
+      - codesign -v --strict --verbose=2 MyGame.app
+
+  gen_atlas:
+    summary:
+      https://www.nerdfonts.com/
+      https://www.nerdfonts.com/cheat-sheet
+    cmds:
+      - cli/msdf-atlas-gen/msdf-atlas-gen -type mtsdf -dimensions 1024 1024 --aemrange -0.04 +0.01 -size 128 -charset charset.txt -font assets/fonts/FiraCodeNerdFont-Regular.ttf -fontname firasans-nerd -imageout assets/fonts/FiraCodeNerdFont-Regular.png -json assets/fonts/FiraCodeNerdFont-Regular.json
