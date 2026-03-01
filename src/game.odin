@@ -32,7 +32,7 @@ Game_State :: struct {
 	msdf_data: MSDF_Data,
 
 	text    : string,
-	text_buf: [45_00_000]u8, // 4_500_000
+	text_buf: [4_500_000]u8, // 4_500_000
 
 	model_mat: Mat4,
 
@@ -86,7 +86,7 @@ game_update :: proc(dt: f64, alpha: f64) {
 		im.ColorEdit3("Ambient Color", &g.ambient_light_color, {.Float})
 
 		im.SeparatorText("Names")
-		if im.InputText("Text: ", cstring(&g.text_buf[0]), 45_00_000) do g.text = string(cstring(&g.text_buf[0]))
+		if im.InputText("Text: ", cstring(&g.text_buf[0]), 4_500_000) do g.text = string(cstring(&g.text_buf[0]))
 
 	}
 	im.End()
