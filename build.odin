@@ -21,8 +21,8 @@ main :: proc() {
 	}
 	for file in files {
 		shadercross(file, "metal", "HLSL",   "MSL")
-		// shadercross(file,  "spv" , "HLSL", "SPIRV")
-		// shadercross(file,  "dxil", "HLSL",  "DXIL")
+		shadercross(file,  "spv" , "HLSL", "SPIRV")
+		shadercross(file,  "dxil", "HLSL",  "DXIL")
 		shadercross(file,  "json", "HLSL",  "JSON")
 	}
 

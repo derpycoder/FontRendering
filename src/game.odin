@@ -76,7 +76,7 @@ game_init :: proc() {
 	g.model_mat = linalg.MATRIX4F32_IDENTITY
 	g.old_string = ""
 
-	g.ssbo = make([dynamic]SSBO_Font_Local)
+	g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 
 	g.builder = strings.builder_make(context.temp_allocator)
 }
@@ -153,7 +153,7 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 			width, height : f32 = g.msdf_data.atlas.width, g.msdf_data.atlas.height
 
 			delete(g.ssbo)
-			g.ssbo = make([dynamic]SSBO_Font_Local)
+			g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 			g.char_count = 0
 
 			count: u32
@@ -219,7 +219,7 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 			ok := sdl.SubmitGPUCommandBuffer(copy_cmd_buf); assert(ok)
 
 			delete(g.ssbo)
-			g.ssbo = make([dynamic]SSBO_Font_Local)
+			g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 			sdl.ReleaseGPUTransferBuffer(g.gpu, transfer_buf)
 		}
 
