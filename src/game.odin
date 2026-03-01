@@ -96,7 +96,7 @@ game_update :: proc(dt: f64, alpha: f64) {
 
 		im.SeparatorText("Names")
 		if im.InputText("Text: ", cstring(&g.text_buf[0]), 4_500_000) {
-			g.text = string(cstring(&g.text_buf[0]))
+			// g.text = string(cstring(&g.text_buf[0]))
 
 			// strings.builder_reset(&g.builder)
 		    // strings.builder_destroy(&g.builder)
@@ -107,7 +107,7 @@ game_update :: proc(dt: f64, alpha: f64) {
 		    // strings.write_string(&g.builder, g.text)
 
 		    // g.new_string = strings.to_string(g.builder)
-		    g.new_string = g.text
+		    g.new_string = string(cstring(&g.text_buf[0]))
 		}
 
 	}
