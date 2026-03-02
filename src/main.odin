@@ -150,6 +150,10 @@ main :: proc() {
 				case .KEY_DOWN:
 					if ev.key.scancode == .ESCAPE do break main_loop
 
+					if ev.key.scancode == .D {
+						g.new_string = "Test"
+					}
+
 					if ev.key.scancode == .RETURN {
 						ui_input_mode = !ui_input_mode
 						_ = sdl.SetWindowRelativeMouseMode(g.window, !ui_input_mode)
@@ -218,43 +222,43 @@ main :: proc() {
 			// More render passes
 
 			// ------ Dear ImGUI Render ------
-			if im_draw_data.DisplaySize.x > 0 && im_draw_data.DisplaySize.y > 0 {
-				im_sdlgpu.PrepareDrawData(im_draw_data, cmd_buf)
-				im_color_target := sdl.GPUColorTargetInfo {
-					texture  = swapchain_tex,
-					load_op  = .LOAD,
-					store_op = .STORE,
-				}
-				im_render_pass  := sdl.BeginGPURenderPass(cmd_buf, &im_color_target, 1, nil)
-				im_sdlgpu.RenderDrawData(im_draw_data, cmd_buf, im_render_pass)
-				sdl.EndGPURenderPass(im_render_pass)
-			}
+			// if im_draw_data.DisplaySize.x > 0 && im_draw_data.DisplaySize.y > 0 {
+			// 	im_sdlgpu.PrepareDrawData(im_draw_data, cmd_buf)
+			// 	im_color_target := sdl.GPUColorTargetInfo {
+			// 		texture  = swapchain_tex,
+			// 		load_op  = .LOAD,
+			// 		store_op = .STORE,
+			// 	}
+			// 	im_render_pass  := sdl.BeginGPURenderPass(cmd_buf, &im_color_target, 1, nil)
+			// 	im_sdlgpu.RenderDrawData(im_draw_data, cmd_buf, im_render_pass)
+			// 	sdl.EndGPURenderPass(im_render_pass)
+			// }
 			// ------ Dear ImGUI Render ------
 		}
 
 		// Submit command buffer
 		ok = sdl.SubmitGPUCommandBuffer(cmd_buf); assert(ok)
 
-		// ------ FPS Counter ------
-		frame_count += 1
-		time_accumulator += dt
-		if time_accumulator >= 1 {
-			current_fps = f64(frame_count) / time_accumulator
-			fps_smoothed = 0.9 * fps_smoothed + 0.1 * current_fps
-			updates_per_sec = f64(fixed_updates) / time_accumulator
+		// // ------ FPS Counter ------
+		// frame_count += 1
+		// time_accumulator += dt
+		// if time_accumulator >= 1 {
+		// 	current_fps = f64(frame_count) / time_accumulator
+		// 	fps_smoothed = 0.9 * fps_smoothed + 0.1 * current_fps
+		// 	updates_per_sec = f64(fixed_updates) / time_accumulator
 
-			text = fmt.caprintf(
-				"SDL3 3D | FPS: %.2f (%.4f ms) | Fixed Updates: %.2f Hz",
-				current_fps,
-				dt,
-				updates_per_sec,
-			)
-			sdl.SetWindowTitle(g.window, text)
+		// 	text = fmt.caprintf(
+		// 		"SDL3 3D | FPS: %.2f (%.4f ms) | Fixed Updates: %.2f Hz",
+		// 		current_fps,
+		// 		dt,
+		// 		updates_per_sec,
+		// 	)
+		// 	sdl.SetWindowTitle(g.window, text)
 
-			frame_count = 0
-			fixed_updates = 0
-			time_accumulator = 0
-		}
+		// 	frame_count = 0
+		// 	fixed_updates = 0
+		// 	time_accumulator = 0
+		// }
 		// ------ FPS Counter ------
 	}
 }

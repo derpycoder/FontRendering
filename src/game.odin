@@ -44,7 +44,7 @@ Game_State :: struct {
 
 	char_count: u32,
 
-	// builder: strings.Builder
+	builder: strings.Builder
 }
 
 game_init :: proc() {
@@ -79,39 +79,41 @@ game_init :: proc() {
 
 	g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 
-	// g.builder = strings.builder_make(context.allocator)
-	// strings.write_string(&g.builder, "Made with ")
-    // strings.write_rune(&g.builder, 0xe23a)
-    // strings.write_string(&g.builder, " by ")
-    // strings.write_string(&g.builder, g.text)
+	g.builder = strings.builder_make(context.allocator)
+	strings.write_string(&g.builder, "Made with ")
+	strings.write_rune(&g.builder, 0xe23a)
+    strings.write_string(&g.builder, " Derpy Coder")
 
-    // g.new_string = strings.to_string(g.builder)
-
-    g.new_string = g.text
+    g.new_string = strings.to_string(g.builder)
 }
 
 game_update :: proc(dt: f64, alpha: f64) {
-	if im.Begin("Inspector") {
-		im.ColorEdit3("Ambient Color", &g.ambient_light_color, {.Float})
+	// if im.Begin("Inspector") {
+	// 	im.ColorEdit3("Ambient Color", &g.ambient_light_color, {.Float})
 
-		im.SeparatorText("Names")
-		if im.InputText("Text: ", cstring(&g.text_buf[0]), 4_500_000) {
-			// g.text = string(cstring(&g.text_buf[0]))
+	// 	im.SeparatorText("Names")
+	// 	if im.InputText("Text: ", cstring(&g.text_buf[0]), 4_500_000) {
+	// 		g.text = string(cstring(&g.text_buf[0]))
 
-			// strings.builder_reset(&g.builder)
-		    // strings.builder_destroy(&g.builder)
-		    // g.builder = strings.builder_make(context.allocator)
-		    // strings.write_string(&g.builder, "Made with ")
-		    // strings.write_rune(&g.builder, 0xe23a)
-		    // strings.write_string(&g.builder, " by ")
-		    // strings.write_string(&g.builder, g.text)
+	// 		strings.builder_reset(&g.builder)
+	// 	    strings.builder_destroy(&g.builder)
+	// 	    g.builder = strings.builder_make(context.allocator)
+	// 	    strings.write_string(&g.builder, "Made with ")
+	// 	    strings.write_rune(&g.builder, 0xe23a)
+	// 	    strings.write_string(&g.builder, " by ")
+	// 	    strings.write_string(&g.builder, g.text)
 
-		    // g.new_string = strings.to_string(g.builder)
-		    g.new_string = string(cstring(&g.text_buf[0]))
-		}
+	// 	    g.new_string = strings.to_string(g.builder)
+	// 	    // g.new_string = string(cstring(&g.text_buf[0]))
 
-	}
-	im.End()
+	// 	    // g.builder = strings.builder_from_bytes(g.text_buf[:])
+	// 	    // g.new_string = strings.to_string(g.builder)
+	// 	    // strings.builder_reset(&g.builder)
+	// 	    // strings.builder_destroy(&g.builder)
+	// 	}
+
+	// }
+	// im.End()
 
 	update_camera(dt)
 }
@@ -162,7 +164,6 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 
 			width, height : f32 = g.msdf_data.atlas.width, g.msdf_data.atlas.height
 
-			delete(g.ssbo)
 			g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 			g.char_count = 0
 
@@ -228,9 +229,8 @@ game_render :: proc(cmd_buf: ^sdl.GPUCommandBuffer, swapchain_tex: ^sdl.GPUTextu
 			sdl.EndGPUCopyPass(copy_pass)
 			ok := sdl.SubmitGPUCommandBuffer(copy_cmd_buf); assert(ok)
 
-			delete(g.ssbo)
-			g.ssbo = make([dynamic]SSBO_Font_Local, context.allocator)
 			sdl.ReleaseGPUTransferBuffer(g.gpu, transfer_buf)
+			delete(g.ssbo)
 
 			g.old_string = g.new_string
 		}

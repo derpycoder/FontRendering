@@ -41,6 +41,10 @@ tasks:
       - MTL_HUD_ENABLED=1 MTL_HUD_CONFIG_FILE=hud/fps-graph.plist odin run ./src -collection:shared=shared -define:nopanic=true -define:noansi=true
       # - odin run build.odin -file -- run
 
+  run_verbose:
+    cmds:
+      - MTL_HUD_ENABLED=1 MTL_HUD_CONFIG_FILE=hud/fps-graph.plist odin run ./src -collection:shared=shared
+
   debug:
     summary:
         odin help build
@@ -58,7 +62,7 @@ tasks:
 
        -vet -vet-cast -vet-tabs -warnings-as-errors -vet-shadowing -sanitize:address -vet-using-param -vet-using-stmt
     cmds:
-      - odin build ./src -out:Debug -debug -collection:shared=shared
+      - odin build ./src -out:Debug -debug -collection:shared=shared -define:nopanic=true -define:noansi=true
       - MTL_HUD_ENABLED=1 ./Debug
       # - odin run build.odin -file
 
