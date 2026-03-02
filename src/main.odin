@@ -12,9 +12,9 @@ import sdl "vendor:sdl3"
 import "shared:tracker"
 import "shared:afmt"
 
-import im        "shared:imgui"
-import im_sdl    "shared:imgui/imgui_impl_sdl3"
-import im_sdlgpu "shared:imgui/imgui_impl_sdlgpu3"
+// import im        "shared:imgui"
+// import im_sdl    "shared:imgui/imgui_impl_sdl3"
+// import im_sdlgpu "shared:imgui/imgui_impl_sdlgpu3"
 
 USE_TRACKING_ALLOCATOR :: #config(USE_TRACKING_ALLOCATOR, true)
 
@@ -73,29 +73,29 @@ init_sdl :: proc() {
 	_ = sdl.SetWindowRelativeMouseMode(g.window, true)
 }
 
-init_imgui :: proc() {
-	im.CHECKVERSION()
-	im.CreateContext()
+// init_imgui :: proc() {
+// 	im.CHECKVERSION()
+// 	im.CreateContext()
 
-	im_sdl.InitForSDLGPU(g.window)
-	im_sdlgpu.Init(&{
-		Device            = g.gpu,
-		ColorTargetFormat = g.swapchain_texture_format,
-	})
+// 	im_sdl.InitForSDLGPU(g.window)
+// 	im_sdlgpu.Init(&{
+// 		Device            = g.gpu,
+// 		ColorTargetFormat = g.swapchain_texture_format,
+// 	})
 
-	style := im.GetStyle()
-	catppuccin_mocha_theme(style)
+// 	style := im.GetStyle()
+// 	catppuccin_mocha_theme(style)
 
-	for &color in style.Colors {
-		color.rgb = linalg.pow(color.rgb, 2.2) // Gamma Correction for Imgui
-	}
-}
+// 	for &color in style.Colors {
+// 		color.rgb = linalg.pow(color.rgb, 2.2) // Gamma Correction for Imgui
+// 	}
+// }
 
 main :: proc() {
 	context.logger = log.create_console_logger()
 
 	init_sdl()
-	init_imgui()
+	// init_imgui()
 	game_init()
 
 	when USE_TRACKING_ALLOCATOR {
@@ -122,12 +122,12 @@ main :: proc() {
 	free_all(context.temp_allocator)
 
 	ui_input_mode := !sdl.GetWindowRelativeMouseMode(g.window)
-	style := im.GetStyle()
-	if !ui_input_mode {
-	    style.Alpha = 0.01
-	} else {
-		style.Alpha = 1
-	}
+	// style := im.GetStyle()
+	// if !ui_input_mode {
+	//     style.Alpha = 0.01
+	// } else {
+	// 	style.Alpha = 1
+	// }
 
 	main_loop: for {
 		free_all(context.temp_allocator)
@@ -142,7 +142,7 @@ main :: proc() {
 		// Process Events
 		ev: sdl.Event
 		for sdl.PollEvent(&ev) {
-			if ui_input_mode do im_sdl.ProcessEvent(&ev)
+			// if ui_input_mode do im_sdl.ProcessEvent(&ev)
 
 			#partial switch ev.type {
 				case .QUIT:
@@ -158,12 +158,12 @@ main :: proc() {
 						ui_input_mode = !ui_input_mode
 						_ = sdl.SetWindowRelativeMouseMode(g.window, !ui_input_mode)
 
-						style := im.GetStyle()
-						if !ui_input_mode {
-						    style.Alpha = 0.01
-						} else {
-							style.Alpha = 1
-						}
+						// style := im.GetStyle()
+						// if !ui_input_mode {
+						//     style.Alpha = 0.01
+						// } else {
+						// 	style.Alpha = 1
+						// }
 					}
 
 					if !ui_input_mode do g.key_pressed[ev.key.scancode] = true
@@ -174,9 +174,9 @@ main :: proc() {
 			}
 		}
 
-		im_sdlgpu.NewFrame()
-		im_sdl.NewFrame()
-		im.NewFrame()
+		// im_sdlgpu.NewFrame()
+		// im_sdl.NewFrame()
+		// im.NewFrame()
 
 		accumulator += dt
 		updates = 0
@@ -199,8 +199,8 @@ main :: proc() {
 		game_update(dt, alpha)
 
 		// ------ Dear ImGUI Data Render ------
-		im.Render()
-		im_draw_data := im.GetDrawData()
+		// im.Render()
+		// im_draw_data := im.GetDrawData()
 		// ------ Dear ImGUI Data Render ------
 
 		// Acquire command buffer
