@@ -1,6 +1,6 @@
 package main
 
-import os "core:os/os2"
+import os "core:os"
 
 import "core:strings"
 import "core:slice"
@@ -34,9 +34,9 @@ main :: proc() {
 
 compile_msl :: proc(file: os.File_Info) {
 	basename := filepath.stem(file.name)
-	src_file := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".metal"   })}, context.temp_allocator)
-	air_file := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".air"     })}, context.temp_allocator)
-	lib_file := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".metallib"})}, context.temp_allocator)
+	src_file, src_err := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".metal"   })}, context.temp_allocator); assert(src_err == nil)
+	air_file, air_err := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".air"     })}, context.temp_allocator); assert(air_err == nil)
+	lib_file, lib_err := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".metallib"})}, context.temp_allocator); assert(lib_err == nil)
 
 	// TODO: Disable source map in Prod build 
 	// -g for including the shader code in the binary for debugin in Metal debugger.
@@ -46,7 +46,7 @@ compile_msl :: proc(file: os.File_Info) {
 
 shadercross :: proc(file: os.File_Info, format: string, src_format: string, dest_format: string) {
 	basename := filepath.stem(file.name)
-	outfile  := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".", format})}, context.temp_allocator)
+	outfile, err  := filepath.join({"assets/shaders/out", strings.concatenate({basename, ".", format})}, context.temp_allocator); assert(err == nil)
 
 	run_arr({SHADERCROSS, "-s", src_format, "-d", dest_format, file.fullpath, "-o", outfile})
 }
@@ -75,7 +75,6 @@ exec :: proc(cmd: []string) -> (code: int, error: os.Error) {
 								})      or_return
 
 	state   := os.process_wait(process) or_return
-	os.process_close          (process) or_return
 
 	return state.exit_code, nil
 }

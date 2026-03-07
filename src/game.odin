@@ -85,6 +85,8 @@ game_init :: proc() {
     strings.write_string(&g.builder, " Derpy Coder")
 
     g.new_string = strings.to_string(g.builder)
+
+    log.info(g.new_string)
 }
 
 game_update :: proc(dt: f64, alpha: f64) {
